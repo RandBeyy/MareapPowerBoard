@@ -2,9 +2,19 @@
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 #include <stdio.h>
+#include <stdbool.h>
+
+typedef struct{
+  char errorCode[2];
+  bool state;
+} Error;
 
 #define buttonPin GPIO_PIN_9
 #define powerPin GPIO_PIN_8
+#define usbCMaleDetect1 GPIO_PIN_11
+#define usbCMaleDetect2 GPIO_PIN_10
+#define usbCFemaleDetect1 GPIO_PIN_2
+#define usbCFemaleDetect2 GPIO_PIN_1
 
 uint32_t AD_RES_SUM = 0;
 uint16_t AD_RES = 5;      //0 - 4095
@@ -12,17 +22,29 @@ const double Vadc = 3.28;
 const double Rsense = 0.05;
 const double Gain = 20.0;
 
-
 double Vout = 0;
 double Iload = 0;
 char output[10] = "abc";
+
+bool load = false;
+
+Error errors[4] = {
+  {"CF", false},        //USB C мама
+  {"CM", false},        //USB C тато
+  {"OS", false},        //Оптични сенсор (датчи штока)
+  {"AT", false}         //Аттіні
+};
 
 I2C_HandleTypeDef hi2c1;
 ADC_HandleTypeDef hadc1;
 const uint16_t powerStateX = 52;
 const uint16_t powerStateY = 7;
+const uint16_t shortTextX = 5;
+const uint16_t shortTextY = 7;
 const uint16_t ampereMeterX = 30;
 const uint16_t ampereMeterY = 20;
+const uint16_t errorsTextX = 10;
+const uint16_t errorsTextY = 50;
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -31,6 +53,11 @@ static void MX_ADC1_Init(void);
 void changePowerState();
 void shortDetected();
 void updateAmpereMeter();
+void checkForLoad();
+void checkUSB_C_Male();
+void checkOpticSensor();
+void checkAttiny();
+void updateErrors();
 
 
 uint32_t timeStart;
@@ -59,14 +86,40 @@ int main(void)
   {
     if (HAL_GPIO_ReadPin(GPIOB, buttonPin) == GPIO_PIN_RESET) changePowerState();
     updateAmpereMeter();
-    
+    checkForLoad();
+    checkOpticSensor();
+    updateErrors();
     }
-      
-  
   }
   
+void checkForLoad(){
+  if (Iload > 0.009 && !load) load = true;
+  else if (Iload < 0.009 && load) load = false;
+}
 
 
+void checkOpticSensor(){
+  if (load && Iload < 0.012) errors[2].state = true;
+  else errors[2].state = false;
+}
+
+void checkUSB_C_Male(){
+  if ((HAL_GPIO_ReadPin(GPIOB, usbCMaleDetect2) == GPIO_PIN_RESET && 
+      HAL_GPIO_ReadPin(GPIOB, usbCMaleDetect1) == GPIO_PIN_RESET) ||
+      (HAL_GPIO_ReadPin(GPIOB, usbCMaleDetect2) == GPIO_PIN_SET && 
+      HAL_GPIO_ReadPin(GPIOB, usbCMaleDetect1) == GPIO_PIN_SET)) errors[1].state = true;
+      else errors[1].state = false;
+}
+
+void updateErrors(){
+  ssd1306_SetCursor(errorsTextX,errorsTextY);
+  ssd1306_WriteString("                   ", Font_7x10, White);
+  if (errors[2].state){
+    ssd1306_SetCursor(errorsTextX,errorsTextY);
+    ssd1306_WriteString(errors[2].errorCode, Font_7x10, White);
+  }
+  ssd1306_UpdateScreen();
+}
 
 void updateAmpereMeter(){
   Vout = (AD_RES * Vadc) / 4095.0;
@@ -89,7 +142,7 @@ void shortDetected(){
   uint16_t color = 1;
   uint32_t timeStart = HAL_GetTick();
   while(1){
-    ssd1306_SetCursor(10,50);
+    ssd1306_SetCursor(shortTextX,shortTextY);
     if (!HAL_GPIO_ReadPin(GPIOB, buttonPin)){
       ssd1306_WriteString("      ", Font_7x10, White);
       ssd1306_UpdateScreen();
@@ -309,13 +362,13 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB1 PB2 PB10 PB11
                            PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11;
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_11;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_9|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
