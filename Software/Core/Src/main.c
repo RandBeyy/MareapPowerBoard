@@ -88,19 +88,24 @@ int main(void)
     updateAmpereMeter();
     checkForLoad();
     checkOpticSensor();
+    checkAttiny();
+    checkUSB_C_Male();
     updateErrors();
     }
   }
   
 void checkForLoad(){
-  if (Iload > 0.009 && !load) load = true;
+  if (Iload >= 0.009 && !load) load = true;
   else if (Iload < 0.009 && load) load = false;
 }
-
 
 void checkOpticSensor(){
   if (load && Iload < 0.012) errors[2].state = true;
   else errors[2].state = false;
+}
+void checkAttiny(){
+  if (load && Iload >= 0.040 && Iload <= 0.043) errors[3].state = true;
+  else errors[3].state = false;
 }
 
 void checkUSB_C_Male(){
@@ -114,10 +119,19 @@ void checkUSB_C_Male(){
 void updateErrors(){
   ssd1306_SetCursor(errorsTextX,errorsTextY);
   ssd1306_WriteString("                   ", Font_7x10, White);
-  if (errors[2].state){
+  ssd1306_SetCursor(errorsTextX,errorsTextY);
+  if (errors[1].state){
     ssd1306_SetCursor(errorsTextX,errorsTextY);
-    ssd1306_WriteString(errors[2].errorCode, Font_7x10, White);
+    ssd1306_WriteString(errors[1].errorCode, Font_7x10, Black);
   }
+  ssd1306_WriteString(" ", Font_7x10, White);
+  if (errors[2].state){
+    ssd1306_WriteString(errors[2].errorCode, Font_7x10, Black);
+  }
+  ssd1306_WriteString(" ", Font_7x10, White);
+  if (errors[3].state){
+    ssd1306_WriteString(errors[3].errorCode, Font_7x10, Black);
+  } 
   ssd1306_UpdateScreen();
 }
 
@@ -365,6 +379,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_11;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB8 */
