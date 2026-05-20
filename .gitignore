@@ -1,0 +1,16 @@
+build
+mx.scratch
+!.settings
+misc
+Additional
+.history
+MareapPowerBoard-backups
+pics
+Production
+Production.zip
+~MareapPowerBoard.kicad_pcb.lck
+~MareapPowerBoard.kicad_pro.lck
+~MareapPowerBoard.kicad_sch.lck
+.pio
+.settings
+.vscode
