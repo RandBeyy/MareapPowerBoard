@@ -1,0 +1,1 @@
+STM32F103C8 (blue pill) based project. Main purpose is to build a testing power board for some selfmade devices. It can show power consumption of USB devices and diagnose some errors.
