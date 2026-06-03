@@ -7837,6 +7837,12 @@
 		(uuid "9d9b774e-2478-4798-8a52-c00fbcfd5fac")
 	)
 	(junction
+		(at 44.45 149.86)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "9dadc2b0-0b95-45ee-a253-d2e80d533ffd")
+	)
+	(junction
 		(at 22.86 101.6)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7859,6 +7865,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b4b4c33e-f2c5-4f84-baaa-c37db8e835ac")
+	)
+	(junction
+		(at 53.34 160.02)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "bb501b94-0cf6-44a9-9689-ef08f06c6961")
 	)
 	(junction
 		(at 168.91 40.64)
@@ -8243,6 +8255,16 @@
 			(type default)
 		)
 		(uuid "0f099c4a-6875-4cac-a6a7-d20038614fcb")
+	)
+	(wire
+		(pts
+			(xy 53.34 160.02) (xy 53.34 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0f775d8d-155e-4715-9238-853d2d585456")
 	)
 	(wire
 		(pts
@@ -8636,7 +8658,7 @@
 	)
 	(wire
 		(pts
-			(xy 43.18 149.86) (xy 45.72 149.86)
+			(xy 43.18 149.86) (xy 44.45 149.86)
 		)
 		(stroke
 			(width 0)
@@ -8763,6 +8785,16 @@
 			(type default)
 		)
 		(uuid "3f27538e-c4e4-4f9a-b93c-619006fb56e6")
+	)
+	(wire
+		(pts
+			(xy 45.72 160.02) (xy 44.45 160.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3f644ae9-92e0-427d-a408-97a29eabe5ec")
 	)
 	(wire
 		(pts
@@ -8893,6 +8925,16 @@
 			(type default)
 		)
 		(uuid "4ee11b35-8325-4acd-b3a2-389bb2f74564")
+	)
+	(wire
+		(pts
+			(xy 44.45 149.86) (xy 45.72 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5054140b-4064-4e09-9ae8-c94a61a712f9")
 	)
 	(wire
 		(pts
@@ -9093,6 +9135,16 @@
 			(type default)
 		)
 		(uuid "60fc4a0e-3e1c-4a07-8a42-bf3abb4e59af")
+	)
+	(wire
+		(pts
+			(xy 44.45 160.02) (xy 44.45 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6171416f-fffa-4055-ab53-6eb60febe00d")
 	)
 	(wire
 		(pts
@@ -9596,7 +9648,7 @@
 	)
 	(wire
 		(pts
-			(xy 53.34 154.94) (xy 53.34 165.1)
+			(xy 53.34 154.94) (xy 53.34 160.02)
 		)
 		(stroke
 			(width 0)
@@ -19831,6 +19883,85 @@
 			(project "MareapPowerBoard"
 				(path "/7470ac58-41ff-4b7f-84e3-8e3819efdbb2"
 					(reference "#PWR029")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 49.53 160.02 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b46208e1-ace7-490e-a69d-6860fdda8d01")
+		(property "Reference" "R14"
+			(at 49.53 157.734 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 49.53 162.56 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 49.53 161.798 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 49.53 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 49.53 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9fa46d6c-d9e0-46cb-98c6-6c43975fb2f6")
+		)
+		(pin "2"
+			(uuid "17676802-d318-462c-a412-339f4bc6d7be")
+		)
+		(instances
+			(project "MareapPowerBoard"
+				(path "/7470ac58-41ff-4b7f-84e3-8e3819efdbb2"
+					(reference "R14")
 					(unit 1)
 				)
 			)
